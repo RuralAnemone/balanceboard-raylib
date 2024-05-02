@@ -110,7 +110,7 @@ void handle_event(struct wiimote_t* wm) {
 	BeginDrawing();
 	DrawLine(400,0,400,680,WHITE);
 	DrawLine(0,340,800,340,WHITE);
-	DrawCircle((int)(circleX*800.0), (int)(circleY*680.0), 20.0, RED);
+	DrawCircle((int)(circleX*800.0 + 400.0), (int)(circleY*680.0 + 340.0), 20.0, RED);
 	printf("x:%i\ny:%i", circleX, circleY);
 	EndDrawing();
 }
