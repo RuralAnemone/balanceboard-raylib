@@ -101,9 +101,9 @@ void handle_event(struct wiimote_t* wm) {
 	float total = wb->tl + wb->tr + wb->bl + wb->br;
 	float x = ((wb->tr + wb->br) / total) * 2 - 1;
 	float y = ((wb->tl + wb->tr) / total) * 2 - 1;
-	printf("Weight: %f kg @ (%f, %f)\n", total, x, y);
-	printf("Interpolated weight: TL:%f  TR:%f  BL:%f  BR:%f\n", wb->tl, wb->tr, wb->bl, wb->br);
-	printf("Raw: TL:%d  TR:%d  BL:%d  BR:%d\n", wb->rtl, wb->rtr, wb->rbl, wb->rbr); 
+	// printf("Weight: %f kg @ (%f, %f)\n", total, x, y);
+	// printf("Interpolated weight: TL:%f  TR:%f  BL:%f  BR:%f\n", wb->tl, wb->tr, wb->bl, wb->br);
+	// printf("Raw: TL:%d  TR:%d  BL:%d  BR:%d\n", wb->rtl, wb->rtr, wb->rbl, wb->rbr); 
 
 	// update screen
 	ClearBackground(BLACK);
