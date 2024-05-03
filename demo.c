@@ -44,8 +44,8 @@
 #endif
 
 #define MAX_WIIMOTES				4
-#define GUI_WIDTH 800
-#define GUI_HEIGHT 680
+#define GUI_WIDTH 1820
+#define GUI_HEIGHT 980
 
 /**
  *	@brief Callback that handles an event.
@@ -106,8 +106,8 @@ void handle_event(struct wiimote_t* wm) {
 	// update screen
 	ClearBackground(BLACK);
 	BeginDrawing();
-	DrawLine(400,0,400,680,WHITE);
-	DrawLine(0,340,800,340,WHITE);
+	DrawLine(GUI_WIDTH/2,0,GUI_WIDTH/2,GUI_HEIGHT,WHITE);
+	DrawLine(0,GUI_HEIGHT/2,GUI_WIDTH,GUI_HEIGHT/2,WHITE);
 	DrawCircle((int)(x*(GUI_WIDTH/2) + (GUI_WIDTH/2)), (int)((-y)*(GUI_HEIGHT/2) + (GUI_HEIGHT/2)), 20.0, RED);
 	EndDrawing();
 }
@@ -218,6 +218,7 @@ int main(int argc, char** argv) {
 
 	// initialize raylib
 	InitWindow(GUI_WIDTH, GUI_HEIGHT, "Balance Board Demo");
+
 	BeginDrawing();
 	DrawText("starting demo...", 10, 10, 20, WHITE);
 	EndDrawing();
