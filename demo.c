@@ -35,7 +35,6 @@
  */
 
 #include <stdio.h>                      /* for printf */
-#include <string.h>
 
 #include "wiiuse.h"                     /* for wiimote_t, classic_ctrl_t, etc */
 #include "raylib.h"
@@ -111,7 +110,9 @@ void handle_event(struct wiimote_t* wm) {
 	BeginDrawing();
 	DrawLine(GUI_WIDTH/2,0,GUI_WIDTH/2,GUI_HEIGHT,WHITE);
 	DrawLine(0,GUI_HEIGHT/2,GUI_WIDTH,GUI_HEIGHT/2,WHITE);
-	DrawCircle((int)(x*(GUI_WIDTH/2) + (GUI_WIDTH/2)), (int)((-y)*(GUI_HEIGHT/2) + (GUI_HEIGHT/2)), 20.0, RED);
+	int uvX = (int) (x * (GUI_WIDTH / 2) + (GUI_WIDTH / 2));
+	int uvY = (int) (-y * (GUI_HEIGHT / 2) + (GUI_HEIGHT / 2));
+	DrawCircle(uvX, uvY, 20.0, RED);
 
 	DrawText("weight:", 10, 50, 20, WHITE);
 	char total_str[50];
@@ -287,7 +288,13 @@ int main(int argc, char** argv) {
 	 */
 	connected = wiiuse_connect(wiimotes, MAX_WIIMOTES);
 	if (connected) {
+		char s[50];
+		sprintf(s, "connected to %i wiimotes (of %i found).", connected, found);
 		printf("Connected to %i wiimotes (of %i found).\n", connected, found);
+
+		BeginDrawing();
+		DrawText(s, 10, 70, 20, WHITE);
+		EndDrawing();
 	} else {
 		printf("Failed to connect to any wiimote.\n");
 		BeginDrawing();
@@ -297,7 +304,7 @@ int main(int argc, char** argv) {
 	}
 
 	BeginDrawing();
-	DrawText("connected", 10, 50, 20, WHITE);
+	DrawText("connected!", 10, 90, 20, WHITE);
 	EndDrawing();
 
 	/*
@@ -305,7 +312,7 @@ int main(int argc, char** argv) {
 	 *	to tell which wiimotes are connected (just like the wii does).
 	 */
 	BeginDrawing();
-	DrawText("setting LEDs...", 10, 70, 20, WHITE);
+	DrawText("setting LEDs...", 10, 110, 20, WHITE);
 	EndDrawing();
 	wiiuse_set_leds(wiimotes[0], WIIMOTE_LED_1);
 	wiiuse_set_leds(wiimotes[1], WIIMOTE_LED_2);
