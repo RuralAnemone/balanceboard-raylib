@@ -35,6 +35,7 @@
  */
 
 #include <stdio.h>                      /* for printf */
+#include <string.h>
 
 #include "wiiuse.h"                     /* for wiimote_t, classic_ctrl_t, etc */
 #include "raylib.h"
@@ -46,6 +47,8 @@
 #define MAX_WIIMOTES				4
 #define GUI_WIDTH 1820
 #define GUI_HEIGHT 980
+
+int score = 0;
 
 /**
  *	@brief Callback that handles an event.
@@ -109,7 +112,26 @@ void handle_event(struct wiimote_t* wm) {
 	DrawLine(GUI_WIDTH/2,0,GUI_WIDTH/2,GUI_HEIGHT,WHITE);
 	DrawLine(0,GUI_HEIGHT/2,GUI_WIDTH,GUI_HEIGHT/2,WHITE);
 	DrawCircle((int)(x*(GUI_WIDTH/2) + (GUI_WIDTH/2)), (int)((-y)*(GUI_HEIGHT/2) + (GUI_HEIGHT/2)), 20.0, RED);
+
+	DrawText("weight:", 10, 50, 20, WHITE);
+	char total_str[50];
+	sprintf(total_str, "%f", total);
+	DrawText(total_str, 80, 50, 20, WHITE);
+	DrawText("kg", 190, 50, 20, WHITE);
+	DrawText("weight:", 10, 70, 20, WHITE);
+	float lbs = total * 2.20462262185;
+	char lbs_str[50];
+	sprintf(lbs_str, "%f", lbs);
+	DrawText(lbs_str, 80, 70, 20, WHITE);
+	DrawText("lbs", 190, 70, 20, WHITE);
+
+	DrawText("score:", 10, 10, 20, WHITE);
+	char score_str[50];
+	sprintf(score_str, "%i", score);
+	DrawText(score_str, 80, 10, 20, WHITE);
 	EndDrawing();
+
+	score++;
 }
 
 /**
