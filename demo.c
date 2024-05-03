@@ -44,7 +44,8 @@
 #endif
 
 #define MAX_WIIMOTES				4
-
+#define GUI_WIDTH 800
+#define GUI_HEIGHT 680
 
 /**
  *	@brief Callback that handles an event.
@@ -102,16 +103,12 @@ void handle_event(struct wiimote_t* wm) {
 	printf("Interpolated weight: TL:%f  TR:%f  BL:%f  BR:%f\n", wb->tl, wb->tr, wb->bl, wb->br);
 	printf("Raw: TL:%d  TR:%d  BL:%d  BR:%d\n", wb->rtl, wb->rtr, wb->rbl, wb->rbr); 
 
-	// 34 is max interpolated weight. from 0 to 1.
-	float circleX = ((wb->tr + wb->br) - (wb->tl + wb->bl)) / (2.0 * 34.0);
-	float circleY = ((wb->tr + wb->tl) - (wb->br + wb->bl)) / (2.0 * 34.0);
 	// update screen
 	ClearBackground(BLACK);
 	BeginDrawing();
 	DrawLine(400,0,400,680,WHITE);
 	DrawLine(0,340,800,340,WHITE);
-	DrawCircle((int)(circleX*800.0 + 400.0), (int)(circleY*680.0 + 340.0), 20.0, RED);
-	printf("x:%i\ny:%i", circleX, circleY);
+	DrawCircle((int)(x*(GUI_WIDTH/2) + (GUI_WIDTH/2)), (int)((-y)*(GUI_HEIGHT/2) + (GUI_HEIGHT/2)), 20.0, RED);
 	EndDrawing();
 }
 
@@ -220,9 +217,9 @@ int main(int argc, char** argv) {
 	int found, connected;
 
 	// initialize raylib
-	InitWindow(800, 680, "Balance Board Demo");
+	InitWindow(GUI_WIDTH, GUI_HEIGHT, "Balance Board Demo");
 	BeginDrawing();
-	DrawText("started demo", 10, 10, 20, WHITE);
+	DrawText("starting demo...", 10, 10, 20, WHITE);
 	EndDrawing();
 
 	/*
@@ -268,9 +265,6 @@ int main(int argc, char** argv) {
 	connected = wiiuse_connect(wiimotes, MAX_WIIMOTES);
 	if (connected) {
 		printf("Connected to %i wiimotes (of %i found).\n", connected, found);
-		BeginDrawing();
-		DrawText("connected", 10, 50, 20, WHITE);
-		EndDrawing();
 	} else {
 		printf("Failed to connect to any wiimote.\n");
 		BeginDrawing();
@@ -278,6 +272,10 @@ int main(int argc, char** argv) {
 		EndDrawing();
 		return 0;
 	}
+
+	BeginDrawing();
+	DrawText("connected", 10, 50, 20, WHITE);
+	EndDrawing();
 
 	/*
 	 *	Now set the LEDs and rumble for a second so it's easy
