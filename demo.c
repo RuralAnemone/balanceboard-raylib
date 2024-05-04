@@ -37,6 +37,7 @@
 #include <stdio.h>                      /* for printf */
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #include "wiiuse.h"                     /* for wiimote_t, classic_ctrl_t, etc */
 #include "raylib.h"
@@ -51,6 +52,7 @@
 
 #define CURSOR_RADIUS 20
 #define ITEM_RADIUS 7
+#define TIME_LIMIT 29.97
 
 // global variables
 int score = 0;
@@ -61,6 +63,8 @@ typedef struct position {
 position getUVFromPos(float x, float y);
 position itemPos;
 position cursorPos;
+float startTime;
+bool timesUp = false;
 bool touchingItem(void);
 void resetItem(void);
 
@@ -151,6 +155,12 @@ void handle_event(struct wiimote_t* wm) {
 	char score_str[50];
 	sprintf(score_str, "%i", score);
 	DrawText(score_str, 80, 10, 20, WHITE);
+	
+	float timeLeft = TIME_LIMIT - (time(NULL) - startTime);
+	if (timeLeft < TIME_LIMIT) timesUp = true;
+	char time_str[50];
+	sprintf(time_str, "time left: %f", timeLeft);
+	DrawText(time_str, 10, GUI_HEIGHT - 10, 30, WHITE);
 	EndDrawing();
 }
 
@@ -195,7 +205,6 @@ position getUVFromPos(float x, float y) {
 }
 
 bool touchingItem(void) {
-	
 	return pow((cursorPos.x-itemPos.x),2) + pow((cursorPos.y-itemPos.y),2) <= pow((CURSOR_RADIUS+ITEM_RADIUS),2);
 }
 
@@ -278,7 +287,8 @@ int main(int argc, char** argv) {
 
 	// initialize raylib
 	InitWindow(GUI_WIDTH, GUI_HEIGHT, "Balance Board Demo");
-
+	while (!IsWindowReady());
+	
 	itemPos.x = rand() % GUI_WIDTH;
 	itemPos.y = rand() % GUI_HEIGHT;
 
@@ -389,6 +399,21 @@ int main(int argc, char** argv) {
 	 */
 	/* wiiuse_status(wiimotes[0]); */
 
+	
+	// show the startup screen
+	BeginDrawing();
+	ClearBackground(BLACK);
+	char time_str[50];
+	sprintf(time_str, "collect as many thingies as you can in %fs", TIME_LIMIT);
+	int fontSize = GUI_HEIGHT/24;
+	// center text:
+	DrawText(time_str, GUI_WIDTH/2 - MeasureText(time_str, fontSize)/2, GUI_HEIGHT/2 - fontSize/2, fontSize, WHITE);
+	DrawText("(:", GUI_WIDTH/2 - MeasureText("(:", fontSize)/2, GUI_HEIGHT/2 + fontSize, fontSize, WHITE);
+	EndDrawing();
+
+	sleep(5);
+	startTime = time(NULL);
+
 	/*
 	 *	This is the main loop
 	 *
@@ -400,7 +425,7 @@ int main(int argc, char** argv) {
 	 *	This function will set the event flag for each wiimote
 	 *	when the wiimote has things to report.
 	 */
-	while (any_wiimote_connected(wiimotes, MAX_WIIMOTES) && !WindowShouldClose() && IsWindowReady()) {
+	while (any_wiimote_connected(wiimotes, MAX_WIIMOTES) && !WindowShouldClose() && !timesUp) {
 		if (wiiuse_poll(wiimotes, MAX_WIIMOTES)) {
 			/*
 			 *	This happens if something happened on any wiimote.
@@ -449,6 +474,17 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
+
+	// game over ):
+	BeginDrawing();
+	ClearBackground(BLACK);
+	DrawText("game over!", GUI_WIDTH/2 - MeasureText("game over!", fontSize)/2, GUI_HEIGHT/2 - fontSize/2, fontSize, WHITE);
+	char score_str[50];
+	sprintf(score_str, "score: %i", score);
+	DrawText(score_str, GUI_WIDTH/2 - MeasureText(score_str, fontSize)/2, GUI_HEIGHT/2 + fontSize, fontSize, WHITE);
+	EndDrawing();
+
+	sleep(5);
 
 	/*
 	 *	Disconnect the wiimotes
