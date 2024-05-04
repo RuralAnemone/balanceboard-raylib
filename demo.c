@@ -52,7 +52,7 @@
 
 #define CURSOR_RADIUS 20
 #define ITEM_RADIUS 7
-#define TIME_LIMIT 29.97
+#define TIME_LIMIT 29
 
 // global variables
 int score = 0;
@@ -63,7 +63,7 @@ typedef struct position {
 position getUVFromPos(float x, float y);
 position itemPos;
 position cursorPos;
-float startTime;
+time_t startTime;
 bool timesUp = false;
 bool touchingItem(void);
 void resetItem(void);
@@ -77,7 +77,7 @@ void resetItem(void);
  *	event occurs on the specified wiimote.
  */
 void handle_event(struct wiimote_t* wm) {
-	printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
+	// printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
 
 	/* if a button is pressed, report it */
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_A)) {
@@ -137,7 +137,6 @@ void handle_event(struct wiimote_t* wm) {
 
 	DrawCircle(cursorPos.x, cursorPos.y, CURSOR_RADIUS, RED);
 	DrawCircle(itemPos.x, itemPos.y, ITEM_RADIUS, YELLOW);
-	printf("item pos: x:%i y:%i", itemPos.x, itemPos.y);
 
 	DrawText("weight:", 10, 50, 20, WHITE);
 	char total_str[50];
@@ -156,11 +155,11 @@ void handle_event(struct wiimote_t* wm) {
 	sprintf(score_str, "%i", score);
 	DrawText(score_str, 80, 10, 20, WHITE);
 	
-	float timeLeft = TIME_LIMIT - (time(NULL) - startTime);
+	time_t timeLeft = TIME_LIMIT - (time(NULL) - startTime);
 	if (timeLeft <= 0) timesUp = true;
 	char time_str[50];
-	sprintf(time_str, "time left: %f", timeLeft);
-	DrawText(time_str, 10, GUI_HEIGHT - 10, 30, WHITE);
+	sprintf(time_str, "time left: %ld", timeLeft);
+	DrawText(time_str, 10, GUI_HEIGHT - 40, 30, WHITE);
 	EndDrawing();
 }
 
@@ -404,7 +403,7 @@ int main(int argc, char** argv) {
 	BeginDrawing();
 	ClearBackground(BLACK);
 	char time_str[50];
-	sprintf(time_str, "collect as many thingies as you can in %fs", TIME_LIMIT);
+	sprintf(time_str, "collect as many thingies as you can in %lds", TIME_LIMIT);
 	int fontSize = GUI_HEIGHT/24;
 	// center text:
 	DrawText(time_str, GUI_WIDTH/2 - MeasureText(time_str, fontSize)/2, GUI_HEIGHT/2 - fontSize/2, fontSize, WHITE);
@@ -485,6 +484,7 @@ int main(int argc, char** argv) {
 	EndDrawing();
 
 	sleep(5);
+	CloseWindow();
 
 	/*
 	 *	Disconnect the wiimotes
