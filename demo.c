@@ -133,6 +133,8 @@ void handle_event(struct wiimote_t* wm) {
 	DrawLine(GUI_WIDTH/2,0,GUI_WIDTH/2,GUI_HEIGHT,WHITE);
 	DrawLine(0,GUI_HEIGHT/2,GUI_WIDTH,GUI_HEIGHT/2,WHITE);
 	
+	DrawRectangleLines(GUI_WIDTH/4, GUI_HEIGHT/4, GUI_WIDTH/2, GUI_HEIGHT/2, Fade(YELLOW, 0.6f));
+
 	cursorPos = getUVFromPos(x, y);
 
 	DrawCircle(cursorPos.x, cursorPos.y, CURSOR_RADIUS, RED);
