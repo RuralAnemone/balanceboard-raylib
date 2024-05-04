@@ -35,6 +35,8 @@
  */
 
 #include <stdio.h>                      /* for printf */
+#include <stdlib.h>
+#include <math.h>
 
 #include "wiiuse.h"                     /* for wiimote_t, classic_ctrl_t, etc */
 #include "raylib.h"
@@ -47,7 +49,20 @@
 #define GUI_WIDTH 1820
 #define GUI_HEIGHT 980
 
+#define CURSOR_RADIUS 20
+#define ITEM_RADIUS 7
+
+// global variables
 int score = 0;
+typedef struct position {
+	int x;
+	int y;
+} position;
+position getUVFromPos(float x, float y);
+position itemPos;
+position cursorPos;
+bool touchingItem(void);
+void resetItem(void);
 
 /**
  *	@brief Callback that handles an event.
@@ -106,13 +121,19 @@ void handle_event(struct wiimote_t* wm) {
 	// printf("Raw: TL:%d  TR:%d  BL:%d  BR:%d\n", wb->rtl, wb->rtr, wb->rbl, wb->rbr); 
 
 	// update screen
+	
+	if(touchingItem()) resetItem();
+	
 	ClearBackground(BLACK);
 	BeginDrawing();
 	DrawLine(GUI_WIDTH/2,0,GUI_WIDTH/2,GUI_HEIGHT,WHITE);
 	DrawLine(0,GUI_HEIGHT/2,GUI_WIDTH,GUI_HEIGHT/2,WHITE);
-	int uvX = (int) (x * (GUI_WIDTH / 2) + (GUI_WIDTH / 2));
-	int uvY = (int) (-y * (GUI_HEIGHT / 2) + (GUI_HEIGHT / 2));
-	DrawCircle(uvX, uvY, 20.0, RED);
+	
+	cursorPos = getUVFromPos(x, y);
+
+	DrawCircle(cursorPos.x, cursorPos.y, CURSOR_RADIUS, RED);
+	DrawCircle(itemPos.x, itemPos.y, ITEM_RADIUS, YELLOW);
+	printf("item pos: x:%i y:%i", itemPos.x, itemPos.y);
 
 	DrawText("weight:", 10, 50, 20, WHITE);
 	char total_str[50];
@@ -131,8 +152,6 @@ void handle_event(struct wiimote_t* wm) {
 	sprintf(score_str, "%i", score);
 	DrawText(score_str, 80, 10, 20, WHITE);
 	EndDrawing();
-
-	score++;
 }
 
 /**
@@ -167,6 +186,24 @@ void handle_read(struct wiimote_t* wm, byte* data, unsigned short len) {
 	printf("\n\n");
 }
 
+position getUVFromPos(float x, float y) {
+	position p;
+	p.x = (int) (x * (GUI_WIDTH / 2) + (GUI_WIDTH / 2));
+	p.y = (int) (-y * (GUI_HEIGHT / 2) + (GUI_HEIGHT / 2));
+
+	return p;
+}
+
+bool touchingItem(void) {
+	
+	return pow((cursorPos.x-itemPos.x),2) + pow((cursorPos.y-itemPos.y),2) <= pow((CURSOR_RADIUS+ITEM_RADIUS),2);
+}
+
+void resetItem() {
+	score++;
+	itemPos.x = rand() % GUI_WIDTH;
+	itemPos.y = rand() % GUI_HEIGHT;
+}
 
 /**
  *	@brief Callback that handles a controller status event.
@@ -241,6 +278,9 @@ int main(int argc, char** argv) {
 
 	// initialize raylib
 	InitWindow(GUI_WIDTH, GUI_HEIGHT, "Balance Board Demo");
+
+	itemPos.x = rand() % GUI_WIDTH;
+	itemPos.y = rand() % GUI_HEIGHT;
 
 	BeginDrawing();
 	DrawText("starting demo...", 10, 10, 20, WHITE);
