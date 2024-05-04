@@ -209,8 +209,8 @@ bool touchingItem(void) {
 
 void resetItem() {
 	score++;
-	itemPos.x = rand() % GUI_WIDTH;
-	itemPos.y = rand() % GUI_HEIGHT;
+	itemPos.x = rand() % (GUI_WIDTH/2) + (GUI_WIDTH/4);
+	itemPos.y = rand() % (GUI_HEIGHT/2) + (GUI_HEIGHT/4);
 }
 
 /**
@@ -288,8 +288,8 @@ int main(int argc, char** argv) {
 	InitWindow(GUI_WIDTH, GUI_HEIGHT, "Balance Board Demo");
 	while (!IsWindowReady());
 	
-	itemPos.x = rand() % GUI_WIDTH;
-	itemPos.y = rand() % GUI_HEIGHT;
+	itemPos.x = rand() % (GUI_WIDTH/2) + (GUI_WIDTH/4);
+	itemPos.y = rand() % (GUI_HEIGHT/2) + (GUI_HEIGHT/4);
 
 	BeginDrawing();
 	DrawText("starting demo...", 10, 10, 20, WHITE);
