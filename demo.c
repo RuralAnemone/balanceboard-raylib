@@ -157,7 +157,7 @@ void handle_event(struct wiimote_t* wm) {
 	DrawText(score_str, 80, 10, 20, WHITE);
 	
 	float timeLeft = TIME_LIMIT - (time(NULL) - startTime);
-	if (timeLeft < TIME_LIMIT) timesUp = true;
+	if (timeLeft <= 0) timesUp = true;
 	char time_str[50];
 	sprintf(time_str, "time left: %f", timeLeft);
 	DrawText(time_str, 10, GUI_HEIGHT - 10, 30, WHITE);
