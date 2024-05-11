@@ -67,7 +67,6 @@ time_t startTime;
 bool timesUp = false;
 bool touchingItem(void);
 void resetItem(void);
-
 /**
  *	@brief Callback that handles an event.
  *
@@ -125,7 +124,6 @@ void handle_event(struct wiimote_t* wm) {
 	// printf("Raw: TL:%d  TR:%d  BL:%d  BR:%d\n", wb->rtl, wb->rtr, wb->rbl, wb->rbr); 
 
 	// update screen
-	
 	if(touchingItem()) resetItem();
 	
 	ClearBackground(BLACK);
@@ -283,6 +281,13 @@ short any_wiimote_connected(wiimote** wm, int wiimotes) {
  *	that occur on either device.
  */
 int main(int argc, char** argv) {
+	// as required/suggested by the GPL:
+	printf("Wii Balance Board Demo - a little game using the Wii Balance Board written in C with Wiiuse and Raylib\n");
+	printf("Copyright (C) 2024 RuralAnemone (Isaiah W)\n\n");
+	printf("This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n");
+	printf("This program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n");
+	printf("You should have received a copy of the GNU General Public License\nalong with this program. If not, see <https://www.gnu.org/licenses/>.\n\n");
+
 	wiimote** wiimotes;
 	int found, connected;
 
