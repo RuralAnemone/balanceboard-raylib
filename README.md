@@ -8,7 +8,7 @@ I hope this is competition legal (:
 
 ### requirements
 
-- #### cmake (minimum version x.x)
+- #### cmake (minimum version 3.10)
 
   - download it from <https://cmake.org/download/> and follow the installation steps for your OS.
 
