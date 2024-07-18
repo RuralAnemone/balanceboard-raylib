@@ -8,6 +8,10 @@ I hope this is competition legal (:
 
 ### requirements
 
+- #### cmake (minimum version x.x)
+
+  - download it from <https://cmake.org/download/> and follow the installation steps for your OS.
+
 - #### wiiuse
 
   - follow the [installation instructions](https://github.com/wiiuse/wiiuse?tab=readme-ov-file#platforms-and-dependencies).
